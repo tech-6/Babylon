@@ -28,7 +28,9 @@ class Upload(commands.Cog):
     @commands.slash_command()
     async def upload(self, file: Attachment, library: str,
         interaction: ApplicationCommandInteraction,
-        series: str = "Unknown"):
+        series: str = "Unknown",
+        file_extension_override: str | None = None
+    ):
 
         await interaction.response.defer()
         file_content = (await self.http_session.request(
@@ -38,6 +40,10 @@ class Upload(commands.Cog):
                 'User-Agent': self.bot.user_agent})).content
 
         print(await self._libraries)
+        if file_extension_override:
+            file.filename.replace(file.filename.split('.')[-1],
+                                  file_extension_override)
+
         if library not in (await self._libraries).keys():
             return await interaction.edit_original_response(
                 content=f"Library `{library}` not found.")
