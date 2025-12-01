@@ -54,7 +54,7 @@ class Upload(commands.Cog):
             return await interaction.edit_original_response(
                 content=f"Error uploading {file.filename}: {e}")
         return await interaction.edit_original_response(
-            content=f"Successfully uploaded {file.filename} to {library}.")
+            content=f"Successfully uploaded `{file.filename}` to {library}.")
 
     @upload.autocomplete('library')
     async def library_autocomplete(self,
