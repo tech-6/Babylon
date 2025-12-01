@@ -1,0 +1,15 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "~=2.32.5"
+disnake = "~=2.11"
+audioop-lts = "~=0.2"
+typing-extensions = "~=4.15.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"

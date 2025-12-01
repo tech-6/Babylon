@@ -1,14 +1,28 @@
+name: librarian
+
 services:
-    kavita:
-        image: jvmilazz0/kavita:latest    # Using the stable branch from the official dockerhub repo.
-        container_name: kavita
-        volumes:
-            - ./manga/:/manga
-            - ./comics/:/comics
-            - ./books/:/books
-            - ./config/:/kavita/config     # /kavita/config must not be changed
-        environment:
-            - TZ=America/Chicago
-        ports:
-            - "5000:5000"
-        restart: unless-stopped
+
+  kavita:
+    image: jvmilazz0/kavita:latest    # Using the stable branch from the official dockerhub repo.
+    container_name: kavita
+    volumes:
+      - ./libraries/manga/:/manga
+      - ./libraries/comics/:/comics
+      - ./libraries/books/:/books
+      - ./config/:/kavita/config     # /kavita/config must not be changed
+    environment:
+      - TZ=America/Chicago
+    ports:
+      - "8000:5000"
+    restart: unless-stopped
+
+  bot:
+    restart: unless-stopped
+    build: ./bot
+    env_file:
+      - .env
+    volumes:
+      - ./libraries:/libraries
+      - configuration:/config
+volumes:
+  configuration:
