@@ -29,8 +29,9 @@ class Upload(commands.Cog):
     async def upload(self, file: Attachment, library: str,
         interaction: ApplicationCommandInteraction,
         series: str = "Unknown",
-        file_extension_override: str | None = None
+        file_extension_override: bool = False
     ):
+        filename = file.filename
 
         await interaction.response.defer()
         file_content = (await self.http_session.request(
@@ -41,8 +42,9 @@ class Upload(commands.Cog):
 
         print(await self._libraries)
         if file_extension_override:
-            file.filename.replace(file.filename.split('.')[-1],
-                                  file_extension_override)
+            tmp_name = filename.split('.')
+            tmp_name.pop()
+            filename = '.'.join(tmp_name)
 
         if library not in (await self._libraries).keys():
             return await interaction.edit_original_response(
@@ -51,16 +53,16 @@ class Upload(commands.Cog):
             os.makedirs(f'/libraries/{library.lower()}/{series}',
                         exist_ok=True)
             with open(
-                f'/libraries/{library.lower()}/{series}/{file.filename}',
+                f'/libraries/{library.lower()}/{series}/{filename}',
                 'xb') as f:
                 async for b, _ in file_content.iter_chunks():
                     f.write(b)
 
         except Exception as e:
             return await interaction.edit_original_response(
-                content=f"Error uploading {file.filename}: {e}")
+                content=f"Error uploading {filename}: {e}")
         return await interaction.edit_original_response(
-            content=f"Successfully uploaded `{file.filename}` to {library}.")
+            content=f"Successfully uploaded `{filename}` to {library}.")
 
     @upload.autocomplete('library')
     async def library_autocomplete(self,
