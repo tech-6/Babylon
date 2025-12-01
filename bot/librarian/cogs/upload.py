@@ -83,7 +83,7 @@ class Upload(commands.Cog):
             return self._series_cache[0]
         self.logger.debug("Module Cache: MISS")
         known_series_req = await self.http_session.request(
-            'GET',
+            'POST',
             f'{self.bot.config.get("kavita_base_url")}/api/Library/series',
             headers={'Authorization': f'Bearer {await self.get_jwt()}'})
         known_series_req.raise_for_status()
